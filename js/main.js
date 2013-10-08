@@ -1,0 +1,1 @@
+//Main Javascript code for handling the weather info.

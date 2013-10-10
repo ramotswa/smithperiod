@@ -19,7 +19,7 @@ function getData(lat,long,time) {
     var newOne = encodeURIComponent(currentTimeStampURL);
      var encodedImageURL = proxy + newOne;
      var resultsArray = [];
-    
+     var report;
     var newReq = new XMLHttpRequest();
     newReq.open("GET", encodedImageURL, false);
   
@@ -61,7 +61,24 @@ function getData(lat,long,time) {
 
     newReq.send();
 
-    doStuffMO(resultsArray);
+    for (var i = 0; i < result.length; i++) {
+        var theDate = new Date(result[i][0]);
+        var unixDate = theDate.getTime() / 1000;
+        chart.series[0].addPoint([theDate, result[i][1], true, false]); //false = don't refresh on this one - only on the next one. 
+        chart.series[1].addPoint([theDate, result[i][2], true, true]);
+
+        if (result[i - 1] != undefined) {
+            if ((result[i][3] == true) && (result[i - 1][3] == true)) {
+                result[i][4] = true;
+            } else {
+                result[i][4] = false;
+            }
+        }
+        report = theDate += "    Smith Day: " + result[i][3] + "   Smith Period: " + result[i][4] + "</br>";
+        document.getElementById('results').innerHTML += theDate + "    Smith Day: " + result[i][3] + "   Smith Period: " + result[i][4] + "</br>";
+    }
+    return report;
+    report = "";
 
 }
 var chart;
